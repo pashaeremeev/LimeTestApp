@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_rounded"
+    android:elevation="8dp"
+    android:padding="8dp"
+    android:layout_margin="10dp">
+    
+    <ImageView
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/iconChannel"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/nameChannel"
+        android:text="Channel"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:layout_toEndOf="@+id/iconChannel"/>
+
+    <ImageView
+        android:id="@+id/isFavoriteView"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true" />
+
+
+</RelativeLayout>

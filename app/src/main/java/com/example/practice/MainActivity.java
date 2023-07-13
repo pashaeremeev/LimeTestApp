@@ -2,9 +2,12 @@ package com.example.practice;
 
 import android.os.Bundle;
 import android.util.TypedValue;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -29,12 +32,13 @@ public class MainActivity extends AppCompatActivity {
 
         PageAdapter adapter = new PageAdapter(getSupportFragmentManager(), getLifecycle());
         viewPager.setAdapter(adapter);
-
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
                 tab.setText(tabNames[position])).attach();
-
         toSetSettingsOfSearchView();
     }
+
+
+
 
     private void toSetSettingsOfSearchView() {
         SearchView searchView = (SearchView) findViewById(R.id.searchView);

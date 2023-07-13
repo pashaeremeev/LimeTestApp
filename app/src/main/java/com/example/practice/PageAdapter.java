@@ -19,7 +19,7 @@ public class PageAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                AllChannelsFragment all = new AllChannelsFragment();
+                AllChannelFragment all = new AllChannelFragment();
                 return all;
             case 1:
                 FavoriteChannelsFragment favorite = new FavoriteChannelsFragment();
