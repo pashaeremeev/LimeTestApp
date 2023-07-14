@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.practice.NestedScrollableHost xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="10dp">
-<androidx.recyclerview.widget.RecyclerView
     android:id="@+id/recyclerView"
     android:name="com.example.practice.AllChannelFragment"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:layoutManager="LinearLayoutManager"
     tools:context=".AllChannelFragment"
-    tools:listitem="@layout/fragment_all_channel" />
-</com.example.practice.NestedScrollableHost>
+    tools:listitem="@layout/fragment_all_channel"
+    android:paddingBottom="10dp"/>

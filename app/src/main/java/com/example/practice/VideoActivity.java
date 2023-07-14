@@ -1,5 +1,6 @@
 package com.example.practice;
 
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
 import androidx.media3.common.util.UnstableApi;
-import androidx.media3.datasource.DefaultDataSource;
-import androidx.media3.datasource.DefaultDataSourceFactory;
 import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
@@ -29,6 +28,7 @@ import java.util.HashMap;
     private ProgressBar progressBar;
     private ExoPlayer player;
     private boolean isFullScreen = false;
+    private boolean isStop = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,13 +37,14 @@ import java.util.HashMap;
 
         playerView = findViewById(R.id.exoplayerView);
         progressBar = findViewById(R.id.progressBar);
-        ImageView btnFullScreen = playerView.findViewById(R.id.bt_fullscreen);
+        ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
+        ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/Iz9NlEATsSPbrr5spjajhg,1689414483/streaming/1kanalott/324/1/index.m3u8");
-        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
+        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/Iz9NlEATsSPbrr5spjajhg,1689414483/streaming/1kanalott/324/1/index.m3u8");
+//        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
         //DefaultTrackSelector chooses tracks in the media item
         DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
 //        trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
@@ -53,6 +54,7 @@ import java.util.HashMap;
                 .setTrackSelector(trackSelector)
                 .build();
         playerView.setPlayer(player);
+        playerView.setKeepScreenOn(true);
         MediaItem mediaItem = MediaItem.fromUri(videoUrl);
         DefaultHttpDataSource.Factory httpDataSourceFactory = new DefaultHttpDataSource.Factory()
                 .setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
@@ -66,20 +68,23 @@ import java.util.HashMap;
         player.prepare();
         player.setPlayWhenReady(true);
 
-        btnFullScreen.setOnClickListener(view -> {
+        settingsBtn.setOnClickListener(view -> {
             TrackSelectionDialog trackSelectionDialog =
                     TrackSelectionDialog.createForPlayer(
                             player,
                              dismissedDialog -> {});
             trackSelectionDialog.show(getSupportFragmentManager(), /* tag= */ null);
 
-//            if (isFullScreen) {
-//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//                isFullScreen = false;
-//            } else {
-//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//                isFullScreen = true;
-//            }
+        });
+
+        fullScreenBtn.setOnClickListener(view -> {
+            if (isFullScreen) {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                isFullScreen = false;
+            } else {
+                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                isFullScreen = true;
+            }
         });
 
         player.addListener(new Player.Listener() {
@@ -87,17 +92,29 @@ import java.util.HashMap;
             public void onPlaybackStateChanged(int state) {
                 if (state == Player.STATE_READY) {
                     progressBar.setVisibility(View.GONE);
-                    player.setPlayWhenReady(true);
                 } else if (state == Player.STATE_BUFFERING) {
                     progressBar.setVisibility(View.VISIBLE);
-                    playerView.setKeepScreenOn(true);
                 } else {
                     progressBar.setVisibility(View.GONE);
-                    player.setPlayWhenReady(true);
                 }
             }
         });
+
+        ImageView ppBtn = playerView.findViewById(R.id.exo_play);
+        ppBtn.setOnClickListener(view -> {
+            if (player.isPlaying()) {
+                player.pause();
+                player.setPlayWhenReady(false);
+                ppBtn.setImageResource(R.drawable.ic_arrow_play);
+            } else {
+                player.play();
+                player.setPlayWhenReady(true);
+                ppBtn.setImageResource(R.drawable.ic_pause);
+            }
+        });
+
     }
+
 
     @Override
     protected void onResume() {

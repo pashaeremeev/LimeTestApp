@@ -2,15 +2,10 @@ package com.example.practice;
 
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import java.util.List;
-import java.util.function.BiFunction;
-
 import kotlin.jvm.functions.Function1;
 
 public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyViewChannelHolder> {
