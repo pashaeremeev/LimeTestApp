@@ -3,20 +3,27 @@ package com.example.practice;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
+import androidx.media3.common.Timeline;
 import androidx.media3.common.util.UnstableApi;
+import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.ui.DefaultTimeBar;
 import androidx.media3.ui.PlayerView;
 
 import java.util.HashMap;
@@ -29,6 +36,8 @@ import java.util.HashMap;
     private ExoPlayer player;
     private boolean isFullScreen = false;
     private boolean isStop = false;
+    private Runnable runnable;
+    private Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +53,7 @@ import java.util.HashMap;
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/Iz9NlEATsSPbrr5spjajhg,1689414483/streaming/1kanalott/324/1/index.m3u8");
+//        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
         //DefaultTrackSelector chooses tracks in the media item
         DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
@@ -63,10 +73,35 @@ import java.util.HashMap;
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("X-LHD-Agent", "{\"platform\":\"android\",\"app\":\"stream.tv.online\",\"version_name\":\"3.1.3\",\"version_code\":\"400\",\"sdk\":\"29\",\"name\":\"Huawei+Wgr-w19\",\"device_id\":\"a4ea673248fe0bcc\",\"is_huawei\":\"0\"}");
         httpDataSourceFactory.setDefaultRequestProperties(requestProperties);
-        MediaSource mediaSource = new HlsMediaSource.Factory(httpDataSourceFactory).createMediaSource(mediaItem);
-        player.setMediaSource(mediaSource);
+        MediaSource mediaSource = new HlsMediaSource.Factory(new DataSource.Factory() {
+            @Override
+            public DataSource createDataSource() {
+                return null;
+            }
+        }).createMediaSource(mediaItem);
+//        player.setMediaSource(mediaSource);
+        player.setMediaItem(mediaItem);
         player.prepare();
         player.setPlayWhenReady(true);
+
+        SeekBar newTimeBar = playerView.findViewById(R.id.newProgress);
+
+        newTimeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         settingsBtn.setOnClickListener(view -> {
             TrackSelectionDialog trackSelectionDialog =
@@ -88,9 +123,20 @@ import java.util.HashMap;
         });
 
         player.addListener(new Player.Listener() {
+
             @Override
             public void onPlaybackStateChanged(int state) {
                 if (state == Player.STATE_READY) {
+                    newTimeBar.setMax((int) player.getDuration());
+                    handler = new Handler(Looper.getMainLooper());
+                    runnable = new Runnable() {
+                        @Override
+                        public void run() {
+                            newTimeBar.setProgress((int) (player.getCurrentPosition()));
+                            handler.postDelayed(runnable, 1000);
+                        }
+                    };
+                    handler.postDelayed(runnable, 0);
                     progressBar.setVisibility(View.GONE);
                 } else if (state == Player.STATE_BUFFERING) {
                     progressBar.setVisibility(View.VISIBLE);
@@ -112,7 +158,6 @@ import java.util.HashMap;
                 ppBtn.setImageResource(R.drawable.ic_pause);
             }
         });
-
     }
 
 
@@ -126,6 +171,7 @@ import java.util.HashMap;
     @Override
     protected void onPause() {
         player.setPlayWhenReady(false);
+        handler.removeCallbacksAndMessages(null);
         super.onPause();
     }
 
