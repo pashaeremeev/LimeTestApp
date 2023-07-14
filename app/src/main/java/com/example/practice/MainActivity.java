@@ -28,22 +28,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         tabLayout = findViewById(R.id.tabLayout);
-        tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
 
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-
-            }
-        });
         viewPager = findViewById(R.id.pager);
 
         PageAdapter adapter = new PageAdapter(getSupportFragmentManager(), getLifecycle());
@@ -52,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
                 tab.setText(tabNames[position])).attach();
         toSetSettingsOfSearchView();
     }
-
-
-
 
     private void toSetSettingsOfSearchView() {
         SearchView searchView = (SearchView) findViewById(R.id.searchView);
@@ -66,6 +48,5 @@ public class MainActivity extends AppCompatActivity {
         ImageView searchIcon = searchView.findViewById(androidx.appcompat.R.id.search_mag_icon);
         searchIcon.setColorFilter(getResources().getColor(R.color.searchText, getTheme()),
                 android.graphics.PorterDuff.Mode.SRC_IN);
-
     }
 }

@@ -13,11 +13,14 @@ import androidx.media3.common.Player;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.datasource.DefaultDataSource;
 import androidx.media3.datasource.DefaultDataSourceFactory;
+import androidx.media3.datasource.DefaultHttpDataSource;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.ui.PlayerView;
+
+import java.util.HashMap;
 
 
 @UnstableApi public class VideoActivity extends AppCompatActivity {
@@ -39,7 +42,8 @@ import androidx.media3.ui.PlayerView;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/DDxgRuR-ZMOZfWqHd8J7oQ,1689322521/streaming/izvestia/324/1/index.m3u8");
+//        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/Iz9NlEATsSPbrr5spjajhg,1689414483/streaming/1kanalott/324/1/index.m3u8");
+        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
         //DefaultTrackSelector chooses tracks in the media item
         DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
 //        trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
@@ -50,9 +54,14 @@ import androidx.media3.ui.PlayerView;
                 .build();
         playerView.setPlayer(player);
         MediaItem mediaItem = MediaItem.fromUri(videoUrl);
-        MediaSource mediaSource = new HlsMediaSource.Factory(
-                new DefaultDataSource.Factory(getBaseContext())
-        ).createMediaSource(mediaItem);
+        DefaultHttpDataSource.Factory httpDataSourceFactory = new DefaultHttpDataSource.Factory()
+                .setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
+                .setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS)
+                .setAllowCrossProtocolRedirects(true);
+        HashMap<String, String> requestProperties = new HashMap<>();
+        requestProperties.put("X-LHD-Agent", "{\"platform\":\"android\",\"app\":\"stream.tv.online\",\"version_name\":\"3.1.3\",\"version_code\":\"400\",\"sdk\":\"29\",\"name\":\"Huawei+Wgr-w19\",\"device_id\":\"a4ea673248fe0bcc\",\"is_huawei\":\"0\"}");
+        httpDataSourceFactory.setDefaultRequestProperties(requestProperties);
+        MediaSource mediaSource = new HlsMediaSource.Factory(httpDataSourceFactory).createMediaSource(mediaItem);
         player.setMediaSource(mediaSource);
         player.prepare();
         player.setPlayWhenReady(true);

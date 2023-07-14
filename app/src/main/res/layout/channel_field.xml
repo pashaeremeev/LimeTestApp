@@ -6,7 +6,9 @@
     android:background="@drawable/bg_rounded"
     android:elevation="8dp"
     android:padding="8dp"
-    android:layout_margin="10dp">
+    android:layout_marginTop="10dp"
+    android:layout_marginLeft="10dp"
+    android:layout_marginRight="10dp">
     
     <ImageView
         android:layout_width="60dp"
@@ -20,7 +22,20 @@
         android:text="Channel"
         android:textColor="@color/white"
         android:textSize="18sp"
-        android:layout_toEndOf="@+id/iconChannel"/>
+        android:layout_toEndOf="@+id/iconChannel"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <TextView
+        android:id="@+id/nameTvShow"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameChannel"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@+id/iconChannel"
+        android:text="TVshow"
+        android:textColor="@color/white"
+        android:textSize="15sp" />
 
     <ImageView
         android:id="@+id/isFavoriteView"

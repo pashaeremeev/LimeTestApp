@@ -1,15 +1,17 @@
-package com.example.practice.placeholder;
+package com.example.practice;
 
 public class Channel {
 
+    private int id;
     private String name;
+    private int image;
     private boolean isFavorite;
-    private int Image;
 
-    public Channel(String name, boolean isFavorite, int image) {
+    public Channel(int id, String name, int image, boolean isFavorite) {
+        this.id = id;
         this.name = name;
+        this.image = image;
         this.isFavorite = isFavorite;
-        Image = image;
     }
 
     public String getName() {
@@ -20,6 +22,14 @@ public class Channel {
         this.name = name;
     }
 
+    public int getImage() {
+        return image;
+    }
+
+    public void setImage(int image) {
+        this.image = image;
+    }
+
     public boolean isFavorite() {
         return isFavorite;
     }
@@ -28,11 +38,11 @@ public class Channel {
         isFavorite = favorite;
     }
 
-    public int getImage() {
-        return Image;
+    public int getId() {
+        return id;
     }
 
-    public void setImage(int image) {
-        Image = image;
+    public void setId(int id) {
+        this.id = id;
     }
 }

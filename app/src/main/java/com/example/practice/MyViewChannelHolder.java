@@ -9,25 +9,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MyViewChannelHolder extends RecyclerView.ViewHolder {
 
-    private ImageView iconChannel, isFavoriteView;
-    private TextView nameChannel;
+    private ImageView iconChannel, favoriteView;
+    private TextView nameChannel, tvShow;
 
     public MyViewChannelHolder(@NonNull View itemView) {
         super(itemView);
         iconChannel = itemView.findViewById(R.id.iconChannel);
-        isFavoriteView = itemView.findViewById(R.id.isFavoriteView);
+        favoriteView = itemView.findViewById(R.id.isFavoriteView);
         nameChannel = itemView.findViewById(R.id.nameChannel);
+        tvShow = itemView.findViewById(R.id.nameTvShow);
     }
 
     public ImageView getIconChannel() {
         return iconChannel;
     }
 
-    public ImageView getIsFavoriteView() {
-        return isFavoriteView;
+    public ImageView getFavoriteView() {
+        return favoriteView;
     }
 
     public TextView getNameChannel() {
         return nameChannel;
+    }
+
+    public TextView getTvShow() {
+        return tvShow;
     }
 }

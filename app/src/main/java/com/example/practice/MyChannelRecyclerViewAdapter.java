@@ -2,23 +2,27 @@ package com.example.practice;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.practice.placeholder.Channel;
-
 import java.util.List;
+import java.util.function.BiFunction;
+
+import kotlin.jvm.functions.Function1;
 
 public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyViewChannelHolder> {
 
+    private Function1<Channel, Void> clickListener;
     private Context context;
     private List<Channel> channels;
 
-    public MyChannelRecyclerViewAdapter(Context context, List<Channel> channels) {
+    public MyChannelRecyclerViewAdapter(Context context, List<Channel> channels, Function1<Channel, Void> clickListener) {
         this.context = context;
         this.channels = channels;
+        this.clickListener = clickListener;
     }
 
     @Override
@@ -29,9 +33,16 @@ public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyViewCha
 
     @Override
     public void onBindViewHolder(@NonNull MyViewChannelHolder holder, int position) {
-        holder.getIconChannel().setImageResource(channels.get(position).getImage());
-        holder.getNameChannel().setText(channels.get(position).getName());
-        holder.getIsFavoriteView().setImageResource(channels.get(position).getImage());
+        Channel item = channels.get(position);
+        holder.getIconChannel().setImageResource(item.getImage());
+        holder.getNameChannel().setText(item.getName());
+        if (item.isFavorite()) {
+            holder.getFavoriteView().setImageResource(R.drawable.star_selected);
+        } else {
+            holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
+        }
+        holder.getTvShow().setText(item.getId() + "");
+        holder.itemView.setOnClickListener(view -> clickListener.invoke(item));
     }
 
     @Override
