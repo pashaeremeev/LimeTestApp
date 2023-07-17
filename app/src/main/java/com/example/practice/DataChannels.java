@@ -2,9 +2,10 @@ package com.example.practice;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
-import java.util.Random;
 
 public class DataChannels extends ArrayList<Channel> {
+
+    private static DataChannels map;
 
     public DataChannels() {
         createChannelList();
@@ -23,5 +24,12 @@ public class DataChannels extends ArrayList<Channel> {
 
     private int generateId() {
         return new SecureRandom().nextInt();
+    }
+
+    public static DataChannels get() {
+        if (map == null) {
+            map = new DataChannels();
+        }
+        return map;
     }
 }

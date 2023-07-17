@@ -19,4 +19,13 @@ public class ChannelsData extends LinkedHashMap<String, Boolean>{
         this.put("ТНТ", false);
         return this;
     }
+
+    private static ChannelsData map;
+
+    public static ChannelsData get() {
+        if (map == null) {
+            map = new ChannelsData();
+        }
+        return map;
+    }
 }

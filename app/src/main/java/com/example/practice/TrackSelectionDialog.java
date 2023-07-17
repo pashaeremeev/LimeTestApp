@@ -54,7 +54,7 @@ public final class TrackSelectionDialog extends DialogFragment {
     }
 
     public static final ImmutableList<Integer> SUPPORTED_TRACK_TYPES =
-            ImmutableList.of(C.TRACK_TYPE_VIDEO, C.TRACK_TYPE_AUDIO, C.TRACK_TYPE_TEXT);
+            ImmutableList.of(C.TRACK_TYPE_VIDEO);
 
     private final SparseArray<TrackSelectionViewFragment> tabFragments;
     private final ArrayList<Integer> tabTrackTypes;

@@ -22,7 +22,7 @@ public class FavChannelFragment extends Fragment {
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
         List<Channel> favChannels = new ArrayList<>();
-        List<Channel> channels = new DataChannels();
+        List<Channel> channels = DataChannels.get();
         for (int i = 0; i < channels.size(); i++) {
             Channel item = channels.get(i);
             if (item.isFavorite()) {
