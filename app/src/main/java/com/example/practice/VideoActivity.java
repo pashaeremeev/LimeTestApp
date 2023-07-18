@@ -239,168 +239,23 @@ import java.util.zip.Inflater;
         getView().setVisibility(View.GONE);
     }
 
-    //    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_video);
-//
-//        playerView = findViewById(R.id.exoplayerView);
-//        progressBar = findViewById(R.id.progressBar);
-//        ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
-//        ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
-//
-//        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-//                WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//
-//        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/5tzYJRkx_8x4VIGmmym0KA,1689751804/streaming/1kanalott/324/1/index.m3u8");
-////        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
-////        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
-////        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/LawCrime-eng/index.m3u8");
-//        //DefaultTrackSelector chooses tracks in the media item
-//        DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
-//        trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
-//
-//        LoadControl loadControl = new DefaultLoadControl();
-//
-//        player = new ExoPlayer.Builder(getBaseContext())
-//                .setTrackSelector(trackSelector)
-//                .setLoadControl(loadControl)
-//                .build();
-//        playerView.setPlayer(player);
-//        playerView.setKeepScreenOn(true);
-//        MediaItem mediaItem = MediaItem.fromUri(videoUrl);
-//        DefaultHttpDataSource.Factory httpDataSourceFactory = new DefaultHttpDataSource.Factory()
-//                .setConnectTimeoutMs(DefaultHttpDataSource.DEFAULT_CONNECT_TIMEOUT_MILLIS)
-//                .setReadTimeoutMs(DefaultHttpDataSource.DEFAULT_READ_TIMEOUT_MILLIS)
-//                .setAllowCrossProtocolRedirects(true);
-//        HashMap<String, String> requestProperties = new HashMap<>();
-//        requestProperties.put("X-LHD-Agent", "{\"platform\":\"android\",\"app\":\"stream.tv.online\",\"version_name\":\"3.1.3\",\"version_code\":\"400\",\"sdk\":\"29\",\"name\":\"Huawei+Wgr-w19\",\"device_id\":\"a4ea673248fe0bcc\",\"is_huawei\":\"0\"}");
-//        httpDataSourceFactory.setDefaultRequestProperties(requestProperties);
-//        MediaSource mediaSource = new HlsMediaSource.Factory(httpDataSourceFactory).createMediaSource(mediaItem);
-//        player.setMediaSource(mediaSource);
-////        player.setMediaItem(mediaItem);
-//        player.prepare();
-//        player.setPlayWhenReady(true);
-//
-//        SeekBar newTimeBar = playerView.findViewById(R.id.newProgress);
-//
-//        newTimeBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-//            @Override
-//            public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-//
-//            }
-//
-//            @Override
-//            public void onStartTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//
-//            @Override
-//            public void onStopTrackingTouch(SeekBar seekBar) {
-//
-//            }
-//        });
-//
-//        settingsBtn.setOnClickListener(view -> {
-//            ArrayList<Quality> qualities = new ArrayList<>();
-//            for (int i = 0; i < player.getCurrentTracks().getGroups().get(0).length; i++) {
-//                int height = player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup().getFormat(i).height;
-//                int width = player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup().getFormat(i).width;
-//                qualities.add(new Quality(width, height, i));
-//            }
-//            int currentIndex = qualities.size();
-//            qualities.add(new Quality(-1, -1, qualities.size()));
-//            for (int i = 0; i < player.getCurrentTracks().getGroups().get(0).length; i++) {
-//                if (player.getCurrentTracks().getGroups().get(0).isTrackSelected(i)
-//                        && !(player.getTrackSelector().getParameters().overrides.isEmpty())) {
-//                    currentIndex = i;
-//                }
-//            }
-//            if (!ItemQualityFragment.isExist) {
-//                ItemQualityFragment itemQualityFragment = ItemQualityFragment.getInstance(qualities, currentIndex);
-//                itemQualityFragment.show(getSupportFragmentManager(), null);
-//            }
-//            getSupportFragmentManager().setFragmentResultListener(ItemQualityFragment.REQUEST_KEY,
-//                    this, (requestKey, result) -> {
-//                        int index = result.getInt(ItemQualityFragment.BUNDLE_KEY);
-//                        if (index + 1 == qualities.size()) {
-//                            TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().clearOverrides().build();
-//                            player.getTrackSelector().setParameters(parameters);
-//                        } else {
-//                        TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().addOverride(new TrackSelectionOverride(
-//                                player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup(), index)).build();
-//                        player.getTrackSelector().setParameters(parameters);
-//                        }
-//                        getSupportFragmentManager().clearFragmentResultListener(ItemQualityFragment.REQUEST_KEY);
-//                    });
-//        });
-//
-//        fullScreenBtn.setOnClickListener(view -> {
-//            if (isFullScreen) {
-//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//                isFullScreen = false;
-//            } else {
-//                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-//                isFullScreen = true;
-//            }
-//        });
-//
-//        player.addListener(new Player.Listener() {
-//
-//            @Override
-//            public void onPlaybackStateChanged(int state) {
-//                if (state == Player.STATE_READY) {
-//                    newTimeBar.setMax((int) player.getDuration());
-//                    handler = new Handler(Looper.getMainLooper());
-//                    runnable = new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            newTimeBar.setProgress((int) (player.getCurrentPosition()));
-//                            handler.postDelayed(runnable, 1000);
-//                        }
-//                    };
-//                    handler.postDelayed(runnable, 0);
-//                    progressBar.setVisibility(View.GONE);
-//                } else if (state == Player.STATE_BUFFERING) {
-//                    progressBar.setVisibility(View.VISIBLE);
-//                } else {
-//                    progressBar.setVisibility(View.GONE);
-//                }
-//            }
-//        });
-//
-//        ImageView ppBtn = playerView.findViewById(R.id.exo_play);
-//        ppBtn.setOnClickListener(view -> {
-//            if (player.isPlaying()) {
-//                player.pause();
-//                player.setPlayWhenReady(false);
-//                ppBtn.setImageResource(R.drawable.ic_arrow_play);
-//            } else {
-//                player.play();
-//                player.setPlayWhenReady(true);
-//                ppBtn.setImageResource(R.drawable.ic_pause);
-//            }
-//        });
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        player.seekToDefaultPosition();
+        player.setPlayWhenReady(true);
+    }
 
+    @Override
+    public void onPause() {
+        player.setPlayWhenReady(false);
+        handler.removeCallbacksAndMessages(null);
+        super.onPause();
+    }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        player.seekToDefaultPosition();
-//        player.setPlayWhenReady(true);
-//    }
-//
-//    @Override
-//    protected void onPause() {
-//        player.setPlayWhenReady(false);
-//        handler.removeCallbacksAndMessages(null);
-//        super.onPause();
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        player.release();
-//    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        player.release();
+    }
 }
