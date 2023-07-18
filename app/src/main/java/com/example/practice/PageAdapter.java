@@ -23,7 +23,6 @@ public class PageAdapter extends FragmentStateAdapter {
                 return all;
             case 1:
                 FavChannelFragment favorite = new FavChannelFragment();
-                //FavoriteChannelsFragment favorite = new FavoriteChannelsFragment();
                 return favorite;
         }
         return null;

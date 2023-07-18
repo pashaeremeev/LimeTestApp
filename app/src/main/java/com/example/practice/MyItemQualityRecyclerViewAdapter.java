@@ -3,6 +3,7 @@ package com.example.practice;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,9 +37,13 @@ public class MyItemQualityRecyclerViewAdapter extends RecyclerView.Adapter<MyQua
     public void onBindViewHolder(final MyQualityHolder holder, int position) {
         Quality item = qualities.get(position);
         if (item.getHeight() == - 1) {
-            holder.getQualityText().setText("auto");
+            holder.getQualityText().setText("AUTO");
         } else {
-            holder.getQualityText().setText(item.getHeight() + "");
+            holder.getQualityText().setText(item.getHeight() + "p");
+        }
+        if (item.isCurrent() != 0) {
+            holder.itemView.setBackgroundColor(Color.parseColor("#0077FF"));
+            holder.getQualityText().setTextColor(Color.WHITE);
         }
         holder.itemView.setOnClickListener(view -> clickListener.invoke(item));
     }

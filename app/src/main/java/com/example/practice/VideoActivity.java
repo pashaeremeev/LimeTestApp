@@ -81,7 +81,7 @@ import java.util.HashMap;
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/2aJuzXaaNbUh5yExcYftiw,1689665135/streaming/1kanalott/324/1/index.m3u8");
+        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/5tzYJRkx_8x4VIGmmym0KA,1689751804/streaming/1kanalott/324/1/index.m3u8");
 //        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/LawCrime-eng/index.m3u8");
@@ -137,9 +137,18 @@ import java.util.HashMap;
                 int width = player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup().getFormat(i).width;
                 qualities.add(new Quality(width, height, i));
             }
+            int currentIndex = qualities.size();
             qualities.add(new Quality(-1, -1, qualities.size()));
-            ItemQualityFragment itemQualityFragment = ItemQualityFragment.getInstance(qualities);
-            itemQualityFragment.show(getSupportFragmentManager(), null);
+            for (int i = 0; i < player.getCurrentTracks().getGroups().get(0).length; i++) {
+                if (player.getCurrentTracks().getGroups().get(0).isTrackSelected(i)
+                        && !(player.getTrackSelector().getParameters().overrides.isEmpty())) {
+                    currentIndex = i;
+                }
+            }
+            if (!ItemQualityFragment.isExist) {
+                ItemQualityFragment itemQualityFragment = ItemQualityFragment.getInstance(qualities, currentIndex);
+                itemQualityFragment.show(getSupportFragmentManager(), null);
+            }
             getSupportFragmentManager().setFragmentResultListener(ItemQualityFragment.REQUEST_KEY,
                     this, (requestKey, result) -> {
                         int index = result.getInt(ItemQualityFragment.BUNDLE_KEY);

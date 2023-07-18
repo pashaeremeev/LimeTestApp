@@ -10,6 +10,7 @@ public class Quality implements Parcelable {
     private int height;
     private int width;
     private int index;
+    private int isCurrent = 0;
 
     public Quality(int width, int height, int index) {
         this.height = height;
@@ -21,6 +22,7 @@ public class Quality implements Parcelable {
         height = in.readInt();
         width = in.readInt();
         index = in.readInt();
+        isCurrent = in.readInt();
     }
 
     public static final Creator<Quality> CREATOR = new Creator<Quality>() {
@@ -34,6 +36,14 @@ public class Quality implements Parcelable {
             return new Quality[size];
         }
     };
+
+    public int isCurrent() {
+        return isCurrent;
+    }
+
+    public void setCurrent(int current) {
+        isCurrent = current;
+    }
 
     public int getIndex() {
         return index;
