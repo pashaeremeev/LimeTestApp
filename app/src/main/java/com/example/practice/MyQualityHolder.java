@@ -1,0 +1,25 @@
+package com.example.practice;
+
+import android.view.View;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+public class MyQualityHolder extends RecyclerView.ViewHolder {
+
+    private TextView qualityText;
+
+    public MyQualityHolder(@NonNull View itemView) {
+        super(itemView);
+        qualityText = itemView.findViewById(R.id.qualityItem);
+    }
+
+    public TextView getQualityText() {
+        return qualityText;
+    }
+}

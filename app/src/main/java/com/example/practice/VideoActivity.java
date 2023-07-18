@@ -1,5 +1,9 @@
 package com.example.practice;
 
+import static android.content.ContentValues.TAG;
+
+import android.app.Dialog;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -12,12 +16,19 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentResultListener;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
 import androidx.media3.common.Timeline;
+import androidx.media3.common.TrackSelectionOverride;
+import androidx.media3.common.TrackSelectionParameters;
+import androidx.media3.common.Tracks;
+import androidx.media3.common.util.Assertions;
 import androidx.media3.common.util.UnstableApi;
 import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
@@ -25,16 +36,24 @@ import androidx.media3.datasource.TransferListener;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
+import androidx.media3.exoplayer.RendererCapabilities;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.source.MediaSource;
+import androidx.media3.exoplayer.source.TrackGroupArray;
 import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
+import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
+import androidx.media3.exoplayer.trackselection.MappingTrackSelector.MappedTrackInfo;
 import androidx.media3.exoplayer.trackselection.TrackSelection;
 import androidx.media3.exoplayer.upstream.BandwidthMeter;
 import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
 import androidx.media3.ui.DefaultTimeBar;
+import androidx.media3.ui.DefaultTrackNameProvider;
 import androidx.media3.ui.PlayerView;
+import androidx.media3.ui.TrackSelectionDialogBuilder;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -47,6 +66,7 @@ import java.util.HashMap;
     private boolean isStop = false;
     private Runnable runnable;
     private Handler handler;
+    private Tracks tracks;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,37 +77,17 @@ import java.util.HashMap;
         progressBar = findViewById(R.id.progressBar);
         ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
+        ImageView nextQuality = playerView.findViewById(R.id.qualityNext);
+        ImageView beforeQuality = playerView.findViewById(R.id.qualityBefore);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-//        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/Iz9NlEATsSPbrr5spjajhg,1689414483/streaming/1kanalott/324/1/index.m3u8");
+        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/2aJuzXaaNbUh5yExcYftiw,1689665135/streaming/1kanalott/324/1/index.m3u8");
 //        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
-        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/LawCrime-eng/index.m3u8");
+//        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/LawCrime-eng/index.m3u8");
         //DefaultTrackSelector chooses tracks in the media item
-        BandwidthMeter bandwidthMeter = new BandwidthMeter() {
-            @Override
-            public long getBitrateEstimate() {
-                return 0;
-            }
-
-            @Nullable
-            @Override
-            public TransferListener getTransferListener() {
-                return null;
-            }
-
-            @Override
-            public void addEventListener(Handler eventHandler, EventListener eventListener) {
-
-            }
-
-            @Override
-            public void removeEventListener(EventListener eventListener) {
-
-            }
-        };
         DefaultTrackSelector trackSelector = new DefaultTrackSelector(this);
         trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
 
@@ -107,12 +107,7 @@ import java.util.HashMap;
         HashMap<String, String> requestProperties = new HashMap<>();
         requestProperties.put("X-LHD-Agent", "{\"platform\":\"android\",\"app\":\"stream.tv.online\",\"version_name\":\"3.1.3\",\"version_code\":\"400\",\"sdk\":\"29\",\"name\":\"Huawei+Wgr-w19\",\"device_id\":\"a4ea673248fe0bcc\",\"is_huawei\":\"0\"}");
         httpDataSourceFactory.setDefaultRequestProperties(requestProperties);
-        MediaSource mediaSource = new HlsMediaSource.Factory(/*new DataSource.Factory() {
-            @Override
-            public DataSource createDataSource() {
-                return null;
-            }
-        }*/httpDataSourceFactory).createMediaSource(mediaItem);
+        MediaSource mediaSource = new HlsMediaSource.Factory(httpDataSourceFactory).createMediaSource(mediaItem);
         player.setMediaSource(mediaSource);
 //        player.setMediaItem(mediaItem);
         player.prepare();
@@ -138,12 +133,46 @@ import java.util.HashMap;
         });
 
         settingsBtn.setOnClickListener(view -> {
-            TrackSelectionDialog trackSelectionDialog =
-                    TrackSelectionDialog.createForPlayer(
-                            player,
-                             dismissedDialog -> {});
-            trackSelectionDialog.show(getSupportFragmentManager(), /* tag= */ null);
+            ArrayList<Quality> qualities = new ArrayList<>();
+            for (int i = 0; i < player.getCurrentTracks().getGroups().get(0).length; i++) {
+                int height = player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup().getFormat(i).height;
+                int width = player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup().getFormat(i).width;
+                qualities.add(new Quality(width, height, i));
+            }
+            qualities.add(new Quality(-1, -1, qualities.size() - 1));
+            ItemQualityFragment itemQualityFragment = ItemQualityFragment.getInstance(qualities);
+            itemQualityFragment.show(getSupportFragmentManager(), null);
+            getSupportFragmentManager().setFragmentResultListener(ItemQualityFragment.REQUEST_KEY,
+                    this, (requestKey, result) -> {
+                        int index = result.getInt(ItemQualityFragment.BUNDLE_KEY);
+                        if (index == qualities.size() - 1) {
+                            TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().setMaxVideoSizeSd().build();
+                            player.getTrackSelector().setParameters(parameters);
+                        } else {
+                        TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().addOverride(new TrackSelectionOverride(
+                                player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup(), index)).build();
+                        player.getTrackSelector().setParameters(parameters);
+                        }
+                        getSupportFragmentManager().clearFragmentResultListener(ItemQualityFragment.REQUEST_KEY);
+                    });
+        });
 
+        beforeQuality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TrackSelectionDialogBuilder trackSelectionDialogBuilder =  new TrackSelectionDialogBuilder(
+                        getBaseContext(), (CharSequence) "Video", (Player) player.getCurrentTracks().getGroups(), C.TRACK_TYPE_VIDEO);
+                trackSelectionDialogBuilder.build().show();
+            }
+        });
+
+        nextQuality.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().addOverride(new TrackSelectionOverride(
+                        player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup(), 3)).build();
+                player.getTrackSelector().setParameters(parameters);
+            }
         });
 
         fullScreenBtn.setOnClickListener(view -> {
