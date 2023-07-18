@@ -139,14 +139,14 @@ import java.util.HashMap;
                 int width = player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup().getFormat(i).width;
                 qualities.add(new Quality(width, height, i));
             }
-            qualities.add(new Quality(-1, -1, qualities.size() - 1));
+            qualities.add(new Quality(-1, -1, qualities.size()));
             ItemQualityFragment itemQualityFragment = ItemQualityFragment.getInstance(qualities);
             itemQualityFragment.show(getSupportFragmentManager(), null);
             getSupportFragmentManager().setFragmentResultListener(ItemQualityFragment.REQUEST_KEY,
                     this, (requestKey, result) -> {
                         int index = result.getInt(ItemQualityFragment.BUNDLE_KEY);
-                        if (index == qualities.size() - 1) {
-                            TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().setMaxVideoSizeSd().build();
+                        if (index + 1 == qualities.size()) {
+                            TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().clearOverrides().build();
                             player.getTrackSelector().setParameters(parameters);
                         } else {
                         TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().addOverride(new TrackSelectionOverride(
@@ -160,9 +160,10 @@ import java.util.HashMap;
         beforeQuality.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                TrackSelectionDialogBuilder trackSelectionDialogBuilder =  new TrackSelectionDialogBuilder(
-                        getBaseContext(), (CharSequence) "Video", (Player) player.getCurrentTracks().getGroups(), C.TRACK_TYPE_VIDEO);
-                trackSelectionDialogBuilder.build().show();
+                TrackSelectionDialogBuilder trackSelectionDialogBuilder = new TrackSelectionDialogBuilder(
+                        VideoActivity.this, "Video", player, C.TRACK_TYPE_VIDEO);
+                Dialog dialog = trackSelectionDialogBuilder.build();
+                dialog.show();
             }
         });
 
