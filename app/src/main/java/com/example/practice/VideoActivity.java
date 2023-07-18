@@ -77,8 +77,6 @@ import java.util.HashMap;
         progressBar = findViewById(R.id.progressBar);
         ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
-        ImageView nextQuality = playerView.findViewById(R.id.qualityNext);
-        ImageView beforeQuality = playerView.findViewById(R.id.qualityBefore);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -155,25 +153,6 @@ import java.util.HashMap;
                         }
                         getSupportFragmentManager().clearFragmentResultListener(ItemQualityFragment.REQUEST_KEY);
                     });
-        });
-
-        beforeQuality.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrackSelectionDialogBuilder trackSelectionDialogBuilder = new TrackSelectionDialogBuilder(
-                        VideoActivity.this, "Video", player, C.TRACK_TYPE_VIDEO);
-                Dialog dialog = trackSelectionDialogBuilder.build();
-                dialog.show();
-            }
-        });
-
-        nextQuality.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TrackSelectionParameters parameters = player.getTrackSelector().getParameters().buildUpon().addOverride(new TrackSelectionOverride(
-                        player.getCurrentTracks().getGroups().get(0).getMediaTrackGroup(), 3)).build();
-                player.getTrackSelector().setParameters(parameters);
-            }
         });
 
         fullScreenBtn.setOnClickListener(view -> {
