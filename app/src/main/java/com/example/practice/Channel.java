@@ -6,12 +6,22 @@ public class Channel {
     private String name;
     private int image;
     private boolean isFavorite;
+    private String stream;
 
-    public Channel(int id, String name, int image, boolean isFavorite) {
+    public Channel(int id, String name, int image, boolean isFavorite, String stream) {
         this.id = id;
         this.name = name;
         this.image = image;
         this.isFavorite = isFavorite;
+        this.stream = stream;
+    }
+
+    public String getStream() {
+        return stream;
+    }
+
+    public void setStream(String stream) {
+        this.stream = stream;
     }
 
     public String getName() {
