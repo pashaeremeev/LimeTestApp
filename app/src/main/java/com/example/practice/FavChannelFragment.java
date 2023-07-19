@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,7 +41,10 @@ public class FavChannelFragment extends Fragment {
     }
 
     private Void clickOnChannel(Channel channel) {
-        getActivity().startActivity(new Intent(getActivity(), VideoActivity.class));
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
+        fragmentTransaction.commitAllowingStateLoss();
         return null;
     }
 }

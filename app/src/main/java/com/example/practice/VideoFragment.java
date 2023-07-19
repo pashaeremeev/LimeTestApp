@@ -1,15 +1,11 @@
 package com.example.practice;
 
-import static android.content.ContentValues.TAG;
-
-import android.app.Dialog;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
+import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,49 +16,26 @@ import android.widget.SeekBar;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentResultListener;
-import androidx.lifecycle.LifecycleOwner;
-import androidx.media3.common.C;
 import androidx.media3.common.MediaItem;
 import androidx.media3.common.Player;
-import androidx.media3.common.Timeline;
 import androidx.media3.common.TrackSelectionOverride;
 import androidx.media3.common.TrackSelectionParameters;
-import androidx.media3.common.Tracks;
-import androidx.media3.common.util.Assertions;
 import androidx.media3.common.util.UnstableApi;
-import androidx.media3.datasource.DataSource;
 import androidx.media3.datasource.DefaultHttpDataSource;
-import androidx.media3.datasource.TransferListener;
 import androidx.media3.exoplayer.DefaultLoadControl;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.exoplayer.LoadControl;
-import androidx.media3.exoplayer.RendererCapabilities;
 import androidx.media3.exoplayer.hls.HlsMediaSource;
 import androidx.media3.exoplayer.source.MediaSource;
-import androidx.media3.exoplayer.source.TrackGroupArray;
-import androidx.media3.exoplayer.trackselection.AdaptiveTrackSelection;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
-import androidx.media3.exoplayer.trackselection.FixedTrackSelection;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector;
-import androidx.media3.exoplayer.trackselection.MappingTrackSelector.MappedTrackInfo;
-import androidx.media3.exoplayer.trackselection.TrackSelection;
-import androidx.media3.exoplayer.upstream.BandwidthMeter;
-import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter;
-import androidx.media3.ui.DefaultTimeBar;
-import androidx.media3.ui.DefaultTrackNameProvider;
 import androidx.media3.ui.PlayerView;
-import androidx.media3.ui.TrackSelectionDialogBuilder;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.zip.Inflater;
 
 
-@UnstableApi public class VideoActivity extends Fragment {
+@UnstableApi public class VideoFragment extends Fragment {
 
     public static final String BUNDLE_ID_KEY = "BUNDLE_ID_KEY";
 
@@ -73,10 +46,9 @@ import java.util.zip.Inflater;
     private boolean isStop = false;
     private Runnable runnable;
     private Handler handler;
-    private Tracks tracks;
 
-    public static VideoActivity getInstance(int channelId) {
-        VideoActivity videoFragment = new VideoActivity();
+    public static VideoFragment getInstance(int channelId) {
+        VideoFragment videoFragment = new VideoFragment();
         Bundle bundle = new Bundle();
         bundle.putInt(BUNDLE_ID_KEY, channelId);
         videoFragment.setArguments(bundle);
@@ -86,7 +58,7 @@ import java.util.zip.Inflater;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragment = inflater.inflate(R.layout.activity_video, container, false);
+        View fragment = inflater.inflate(R.layout.fragment_videoplayer, container, false);
 
         container.setVisibility(View.VISIBLE);
         DataChannels channels = DataChannels.get();
@@ -98,6 +70,7 @@ import java.util.zip.Inflater;
         progressBar = fragment.findViewById(R.id.progressBar);
         ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
+        ImageView backBtn = playerView.findViewById(R.id.backBtn);
 
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -191,6 +164,14 @@ import java.util.zip.Inflater;
             } else {
                 getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
                 isFullScreen = true;
+            }
+        });
+
+        backBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onDestroyView();
+                onDestroy();
             }
         });
 

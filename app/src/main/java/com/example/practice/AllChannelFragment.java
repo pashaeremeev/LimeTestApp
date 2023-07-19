@@ -1,6 +1,5 @@
 package com.example.practice;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -30,10 +29,9 @@ import android.view.ViewGroup;
     }
 
     private Void clickOnChannel(Channel channel) {
-        //getActivity().startActivity(new Intent(getActivity(), VideoActivity.class));
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.videoCntainer, VideoActivity.getInstance(channel.getId()));
+        fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
         fragmentTransaction.commitAllowingStateLoss();
         return null;
     }
