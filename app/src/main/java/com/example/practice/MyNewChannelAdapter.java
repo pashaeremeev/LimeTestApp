@@ -49,6 +49,7 @@ public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolde
                 .error(R.drawable.image_not_supported)
                 .into(holder.getIconChannel());
         holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
+        holder.itemView.setOnClickListener(view -> clickListener.invoke(item));
     }
 
     @Override

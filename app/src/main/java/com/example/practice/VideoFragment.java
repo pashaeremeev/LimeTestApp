@@ -62,10 +62,10 @@ import java.util.HashMap;
 
         container.setVisibility(View.VISIBLE);
         //DataChannels channels = DataChannels.get();
-//        DataRepo channels = DataRepo.get();
+        DataRepo channels = DataRepo.getList();
 
-        int channelId = getArguments().getInt(BUNDLE_ID_KEY);
-//        Uri videoUrl = Uri.parse(channels.getById(channelId).getStream());
+        int channelId = getArguments().getInt(BUNDLE_ID_KEY) /*channels.get(0).getId()*/;
+        Uri videoUrl = Uri.parse(channels.getById(channelId).getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);
         progressBar = fragment.findViewById(R.id.progressBar);
@@ -73,13 +73,12 @@ import java.util.HashMap;
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
         ImageView backBtn = playerView.findViewById(R.id.backBtn);
 
-        getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+        //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/5tzYJRkx_8x4VIGmmym0KA,1689751804/streaming/1kanalott/324/1/index.m3u8");
-        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
+//        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/LawCrime-eng/index.m3u8");
-        //DefaultTrackSelector chooses tracks in the media item
         DefaultTrackSelector trackSelector = new DefaultTrackSelector(getContext());
         trackSelector.setParameters(trackSelector.buildUponParameters().setMaxVideoSizeSd());
 
@@ -173,6 +172,7 @@ import java.util.HashMap;
             public void onClick(View view) {
                 onDestroyView();
                 onDestroy();
+                getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             }
         });
 

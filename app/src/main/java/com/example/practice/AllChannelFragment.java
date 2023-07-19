@@ -9,6 +9,7 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
         );
         recyclerView.setAdapter(adapter);
         DataRepo.get(list -> {
+
             adapter.setChannels(list);
             adapter.notifyDataSetChanged();
             return null;
@@ -38,7 +40,7 @@ import java.util.ArrayList;
 
     private Void clickOnChannelView(Data channel) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
         fragmentTransaction.commitAllowingStateLoss();
         return null;

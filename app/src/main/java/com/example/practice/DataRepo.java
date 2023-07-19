@@ -2,6 +2,7 @@ package com.example.practice;
 
 import android.util.Log;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,9 @@ public class DataRepo extends ArrayList<Data> {
             public void onResponse(Call<Data> call, Response<Data> response) {
                 ArrayList<Data> newList = new ArrayList<>();
                 if (response.isSuccessful()) {
-                    newList.add(response.body());
+                    Data body = response.body();
+                    newList.add(body);
+                    listData.add(body);
                 }
                 callback.invoke(newList);
                 Log.d("request", newList.size() + "");
@@ -32,15 +35,27 @@ public class DataRepo extends ArrayList<Data> {
 
             @Override
             public void onFailure(Call<Data> call, Throwable t) {
-                callback.invoke( new ArrayList<>());
+                callback.invoke(new ArrayList<>());
             }
         });
+//        try {
+//            Response<Data> execute = RetrofitClient.getInstance().getApi().getData().execute();
+//            Log.d("request", execute + "");
+//
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     public static DataRepo get(Function1<ArrayList<Data>,Void> callback) {
         if (listData == null) {
             listData = new DataRepo(callback);
         }
+        return listData;
+    }
+
+    public static DataRepo getList() {
         return listData;
     }
 
