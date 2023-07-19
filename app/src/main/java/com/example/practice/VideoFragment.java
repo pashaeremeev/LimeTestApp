@@ -61,10 +61,11 @@ import java.util.HashMap;
         View fragment = inflater.inflate(R.layout.fragment_videoplayer, container, false);
 
         container.setVisibility(View.VISIBLE);
-        DataChannels channels = DataChannels.get();
+        //DataChannels channels = DataChannels.get();
+//        DataRepo channels = DataRepo.get();
 
         int channelId = getArguments().getInt(BUNDLE_ID_KEY);
-        Uri videoUrl = Uri.parse(channels.getById(channelId).getStream());
+//        Uri videoUrl = Uri.parse(channels.getById(channelId).getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);
         progressBar = fragment.findViewById(R.id.progressBar);
@@ -75,7 +76,7 @@ import java.util.HashMap;
         getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 //        Uri videoUrl = Uri.parse("https://mhd.iptv2022.com/p/5tzYJRkx_8x4VIGmmym0KA,1689751804/streaming/1kanalott/324/1/index.m3u8");
-//        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
+        Uri videoUrl = Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/Miami_TV/index.m3u8");
 //        Uri videoUrl = Uri.parse("https://alanza.iptv2022.com/LawCrime-eng/index.m3u8");
         //DefaultTrackSelector chooses tracks in the media item

@@ -13,6 +13,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 @UnstableApi public class AllChannelFragment extends Fragment {
 
     @Override
@@ -20,12 +22,26 @@ import android.view.ViewGroup;
         View view = inflater.inflate(R.layout.fragment_all_channel_list, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
-        recyclerView.setAdapter(new MyChannelRecyclerViewAdapter(
+        MyNewChannelAdapter adapter = new MyNewChannelAdapter(
                 view.getContext(),
-                DataChannels.get(),
-                channel -> clickOnChannel(channel)
-        ));
+                new ArrayList<Data>(),
+                channel -> clickOnChannelView(channel)
+        );
+        recyclerView.setAdapter(adapter);
+        DataRepo.get(list -> {
+            adapter.setChannels(list);
+            adapter.notifyDataSetChanged();
+            return null;
+        });
         return view;
+    }
+
+    private Void clickOnChannelView(Data channel) {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
+        fragmentTransaction.commitAllowingStateLoss();
+        return null;
     }
 
     private Void clickOnChannel(Channel channel) {

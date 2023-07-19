@@ -15,10 +15,6 @@
         android:theme="@style/Theme.Practice"
         tools:targetApi="31" >
         <activity
-            android:name=".VideoFragment"
-            android:exported="true"
-            android:configChanges="orientation|screenSize|layoutDirection"/>
-        <activity
             android:name=".MainActivity"
             android:exported="true" >
             <intent-filter>
