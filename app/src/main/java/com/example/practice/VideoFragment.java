@@ -40,7 +40,6 @@ import java.util.HashMap;
 @UnstableApi public class VideoFragment extends Fragment {
 
     public static final String BUNDLE_ID_KEY = "BUNDLE_ID_KEY";
-    public static final ChannelJsonModel DATA_MODEL = DataJson.CHANNEL_JSON_MODEL;
 
     private PlayerView playerView;
     private ProgressBar progressBar;
@@ -67,8 +66,10 @@ import java.util.HashMap;
         //DataChannels channels = DataChannels.get();
         //ArrayList<Channel> channels = DataRepo.getChannelList();
 
+        ChannelRepo channelRepo = new ChannelRepo(getContext());
+
         int channelId = getArguments().getInt(BUNDLE_ID_KEY) /*channels.get(0).getId()*/;
-        Uri videoUrl = Uri.parse(DataJson.getChannelById(channelId).getStream());
+        Uri videoUrl = Uri.parse(channelRepo.getById(channelId).getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);
         progressBar = fragment.findViewById(R.id.progressBar);

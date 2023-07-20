@@ -21,9 +21,7 @@ import java.lang.reflect.Type;
 @UnstableApi public class MainActivity extends AppCompatActivity {
 
     private static final int SIZE_OF_SEARCH_TEXT_PX = 46;
-    public static final String APP_PREFERENCES = "APP_PREFERENCES";
 
-    public static DataJson dataJson;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private final String[] tabNames = new String[]{"Все", "Избранные"};

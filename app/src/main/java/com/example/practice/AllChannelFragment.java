@@ -1,6 +1,9 @@
 package com.example.practice;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -9,47 +12,43 @@ import androidx.media3.common.util.UnstableApi;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.os.Parcelable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
-import java.util.ArrayList;
-
 @UnstableApi public class AllChannelFragment extends Fragment {
+
+    private ChannelRepo channelRepo;
+    private EpgRepo epgRepo;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_all_channel_list, container, false);
+        channelRepo = new ChannelRepo(getContext());
+        epgRepo = new EpgRepo(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         MyNewChannelAdapter adapter = new MyNewChannelAdapter(
                 view.getContext(),
-                (DataJson.CHANNEL_JSON_MODEL != null) ? DataJson.CHANNEL_JSON_MODEL.getChannelJsons() : new ArrayList<>(),
-                /*new ArrayList<ChannelJson>(),*/
+                channelRepo.getChannels(),
+                epgRepo.getEpgs(),
+                /*(DataJson.CHANNEL_JSON_MODEL != null) ? DataJson.CHANNEL_JSON_MODEL.getChannelJsons() : new ArrayList<>(),*/
                 channel -> clickOnChannelView(channel)
         );
 
-        recyclerView.setAdapter(adapter);
-        DataRepo.loadData(getContext() ,list -> {
-            adapter.setChannels(list);
+        DownloadChannels.downloadChannels(channelRepo, epgRepo, isSuccess -> {
+            if (!isSuccess) {
+                return null;
+            }
+            adapter.setChannels(channelRepo.getChannels());
+            adapter.setEpgs(epgRepo.getEpgs());
             adapter.notifyDataSetChanged();
             return null;
         });
+
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
-    private Void clickOnChannelView(ChannelJson channel) {
+    private Void clickOnChannelView(Channel channel) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
-        fragmentTransaction.commitAllowingStateLoss();
-        return null;
-    }
-
-    private Void clickOnChannel(Channel channel) {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
         fragmentTransaction.commitAllowingStateLoss();
         return null;

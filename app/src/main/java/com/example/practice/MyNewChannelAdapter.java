@@ -11,24 +11,31 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import kotlin.jvm.functions.Function1;
 
 public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolder> {
 
-    private Function1<ChannelJson, Void> clickListener;
+    private Function1<Channel, Void> clickListener;
     private Context context;
-    private ArrayList<ChannelJson> channels;
+    private ArrayList<Channel> channels;
+    private ArrayList<Epg> epgs;
 
-    public MyNewChannelAdapter(Context context, ArrayList<ChannelJson> channels, Function1<ChannelJson, Void> clickListener) {
+    public MyNewChannelAdapter(Context context, ArrayList<Channel> channels, ArrayList<Epg> epgs, Function1<Channel, Void> clickListener) {
         this.clickListener = clickListener;
         this.context = context;
         this.channels = channels;
+        this.epgs = epgs;
     }
 
-    public void setChannels(ArrayList<ChannelJson> channels) {
+    public void setChannels(ArrayList<Channel> channels) {
         this.channels = channels;
+    }
+
+    public void setEpgs(ArrayList<Epg> epgs) {
+        this.epgs = epgs;
     }
 
     @NonNull
@@ -40,9 +47,8 @@ public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolde
 
     @Override
     public void onBindViewHolder(@NonNull MyViewChannelHolder holder, int position) {
-        ChannelJson item = channels.get(position);
-        Channel channelItem = item.createChannel();
-        Epg epgItem = item.createEpg();
+        Channel channelItem = channels.get(position);
+        Epg epgItem = epgs.get(position);
         Uri urlImage = Uri.parse(channelItem.getImage());
         holder.getNameChannel().setText(channelItem.getName());
         holder.getTvShow().setText(epgItem.getTitle());
@@ -55,7 +61,7 @@ public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolde
         } else {
             holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
         }
-        holder.itemView.setOnClickListener(view -> clickListener.invoke(item));
+        holder.itemView.setOnClickListener(view -> clickListener.invoke(channelItem));
     }
 
     @Override
