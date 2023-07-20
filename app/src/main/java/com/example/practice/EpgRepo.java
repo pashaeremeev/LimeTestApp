@@ -29,4 +29,15 @@ public class EpgRepo {
         ArrayList<Epg> epgs = new Gson().fromJson(listJsonString, type);
         return (epgs == null) ? new ArrayList<>() : epgs;
     }
+
+    public Epg getById(int id) {
+        ArrayList<Epg> epgs = getEpgs();
+        for (int i = 0; i < epgs.size(); i++) {
+            Epg epg = epgs.get(i);
+            if (epg.getId() == id) {
+                return epg;
+            }
+        }
+        return null;
+    }
 }

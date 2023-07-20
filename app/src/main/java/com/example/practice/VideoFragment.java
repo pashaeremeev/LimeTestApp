@@ -15,6 +15,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,6 +34,8 @@ import androidx.media3.exoplayer.source.MediaSource;
 import androidx.media3.exoplayer.trackselection.DefaultTrackSelector;
 import androidx.media3.ui.PlayerView;
 
+import com.bumptech.glide.Glide;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -45,7 +48,6 @@ import java.util.HashMap;
     private ProgressBar progressBar;
     private ExoPlayer player;
     private boolean isFullScreen = false;
-    private boolean isStop = false;
     private Runnable runnable;
     private Handler handler = new Handler(Looper.getMainLooper());
 
@@ -64,15 +66,27 @@ import java.util.HashMap;
 
         container.setVisibility(View.VISIBLE);
         ChannelRepo channelRepo = new ChannelRepo(getContext());
+        EpgRepo epgRepo = new EpgRepo(getContext());
 
         int channelId = getArguments().getInt(BUNDLE_ID_KEY);
-        Uri videoUrl = Uri.parse(channelRepo.getById(channelId).getStream());
+        Channel channel = channelRepo.getById(channelId);
+        Epg epgOfChannel = epgRepo.getById(channelId);
+        Uri videoUrl = Uri.parse(channel.getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);
         progressBar = fragment.findViewById(R.id.progressBar);
         ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
         ImageView backBtn = playerView.findViewById(R.id.backBtn);
+        ImageView iconChannel = playerView.findViewById(R.id.iconChannel);
+        TextView channelName = playerView.findViewById(R.id.nameChannel);
+        TextView tvShow = playerView.findViewById(R.id.tvShow);
+
+//        Glide.with(getContext())
+//                .load(channel.getImage())
+//                .into(iconChannel);
+//        channelName.setText(channel.getName());
+//        tvShow.setText(epgOfChannel.getTitle());
 
         //getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
