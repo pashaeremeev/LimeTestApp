@@ -63,12 +63,9 @@ import java.util.HashMap;
         View fragment = inflater.inflate(R.layout.fragment_videoplayer, container, false);
 
         container.setVisibility(View.VISIBLE);
-        //DataChannels channels = DataChannels.get();
-        //ArrayList<Channel> channels = DataRepo.getChannelList();
-
         ChannelRepo channelRepo = new ChannelRepo(getContext());
 
-        int channelId = getArguments().getInt(BUNDLE_ID_KEY) /*channels.get(0).getId()*/;
+        int channelId = getArguments().getInt(BUNDLE_ID_KEY);
         Uri videoUrl = Uri.parse(channelRepo.getById(channelId).getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);

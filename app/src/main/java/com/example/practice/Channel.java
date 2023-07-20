@@ -1,5 +1,9 @@
 package com.example.practice;
 
+import androidx.annotation.Nullable;
+
+import java.util.Objects;
+
 public class Channel {
 
     private int id;
@@ -54,5 +58,15 @@ public class Channel {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, image, stream);
     }
 }

@@ -16,23 +16,27 @@
         android:id="@+id/iconChannel"/>
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:id="@+id/nameChannel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="8dp"
+        android:layout_toStartOf="@+id/isFavoriteView"
+        android:layout_toEndOf="@+id/iconChannel"
+        android:singleLine="true"
         android:text="Channel"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        android:layout_toEndOf="@+id/iconChannel"
-        android:layout_marginLeft="8dp"
-        android:layout_marginBottom="8dp"/>
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/nameTvShow"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/nameChannel"
         android:layout_marginStart="8dp"
+        android:layout_toStartOf="@+id/isFavoriteView"
         android:layout_toEndOf="@+id/iconChannel"
+        android:singleLine="true"
         android:text="TVshow"
         android:textColor="@color/white"
         android:textSize="15sp" />
@@ -41,6 +45,7 @@
         android:id="@+id/isFavoriteView"
         android:layout_width="32dp"
         android:layout_height="32dp"
+        android:layout_marginLeft="16dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true" />
 

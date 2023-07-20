@@ -28,7 +28,6 @@ import androidx.recyclerview.widget.RecyclerView;
                 view.getContext(),
                 channelRepo.getChannels(),
                 epgRepo.getEpgs(),
-                /*(DataJson.CHANNEL_JSON_MODEL != null) ? DataJson.CHANNEL_JSON_MODEL.getChannelJsons() : new ArrayList<>(),*/
                 channel -> clickOnChannelView(channel)
         );
 

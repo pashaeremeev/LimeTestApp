@@ -17,30 +17,50 @@ import java.util.List;
 
 public class FavChannelFragment extends Fragment {
 
+    private ChannelRepo channelRepo;
+    private EpgRepo epgRepo;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_fav_channel_list, container, false);
+        channelRepo = new ChannelRepo(getContext());
+        epgRepo = new EpgRepo(getContext());
         RecyclerView recyclerView = view.findViewById(R.id.recyclerFavView);
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
 
-        List<Channel> favChannels = new ArrayList<>();
-        List<Channel> channels = DataChannels.get();
-        for (int i = 0; i < channels.size(); i++) {
-            Channel item = channels.get(i);
-            if (item.isFavorite()) {
-                favChannels.add(item);
+        MyNewChannelAdapter adapter = new MyNewChannelAdapter(
+                view.getContext(),
+                channelRepo.getChannels(),
+                epgRepo.getEpgs(),
+                channel -> clickOnChannelView(channel)
+        );
+
+        ArrayList<Channel> favChannels = new ArrayList<>();
+        ArrayList<Epg> favEpg = new ArrayList<>();
+        for (int i = 0; i < channelRepo.getChannels().size(); i++) {
+            Channel channel = channelRepo.getChannels().get(i);
+            Epg epg = epgRepo.getEpgs().get(i);
+            if (channel.isFavorite()) {
+                favChannels.add(channel);
+                favEpg.add(epg);
             }
         }
 
-        recyclerView.setAdapter(new MyChannelRecyclerViewAdapter(
-                view.getContext(),
-                favChannels,
-                channel -> clickOnChannel(channel)
-        ));
+        DownloadChannels.downloadChannels(channelRepo, epgRepo, isSuccess -> {
+            if (!isSuccess) {
+                return null;
+            }
+            adapter.setChannels(favChannels);
+            adapter.setEpgs(favEpg);
+            adapter.notifyDataSetChanged();
+            return null;
+        });
+
+        recyclerView.setAdapter(adapter);
         return view;
     }
 
-    private Void clickOnChannel(Channel channel) {
+    private Void clickOnChannelView(Channel channel) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction =  fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));
