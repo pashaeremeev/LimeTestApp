@@ -1,5 +1,7 @@
 package com.example.practice;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,6 +40,7 @@ import java.util.HashMap;
 @UnstableApi public class VideoFragment extends Fragment {
 
     public static final String BUNDLE_ID_KEY = "BUNDLE_ID_KEY";
+    public static final String APP_PREFERENCES = "APP_PREFERENCES";
 
     private PlayerView playerView;
     private ProgressBar progressBar;
@@ -45,7 +48,7 @@ import java.util.HashMap;
     private boolean isFullScreen = false;
     private boolean isStop = false;
     private Runnable runnable;
-    private Handler handler;
+    private Handler handler = new Handler(Looper.getMainLooper());
 
     public static VideoFragment getInstance(int channelId) {
         VideoFragment videoFragment = new VideoFragment();
@@ -62,16 +65,19 @@ import java.util.HashMap;
 
         container.setVisibility(View.VISIBLE);
         //DataChannels channels = DataChannels.get();
-        DataRepo channels = DataRepo.getList();
+        ArrayList<Channel> channels = DataRepo.getChannelList();
 
         int channelId = getArguments().getInt(BUNDLE_ID_KEY) /*channels.get(0).getId()*/;
-        Uri videoUrl = Uri.parse(channels.getById(channelId).getStream());
+        Uri videoUrl = Uri.parse(DataRepo.getById(channelId).getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);
         progressBar = fragment.findViewById(R.id.progressBar);
         ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
         ImageView backBtn = playerView.findViewById(R.id.backBtn);
+
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
+                APP_PREFERENCES, Context.MODE_PRIVATE);
 
         //getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -182,7 +188,6 @@ import java.util.HashMap;
             public void onPlaybackStateChanged(int state) {
                 if (state == Player.STATE_READY) {
                     newTimeBar.setMax((int) player.getDuration());
-                    handler = new Handler(Looper.getMainLooper());
                     runnable = new Runnable() {
                         @Override
                         public void run() {

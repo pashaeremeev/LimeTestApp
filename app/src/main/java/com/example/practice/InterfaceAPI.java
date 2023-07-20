@@ -5,6 +5,6 @@ import retrofit2.http.GET;
 
 public interface InterfaceAPI {
 
-    @GET("fTuatK")
-    Call<Data> getData();
+    @GET("rKkyTS")
+        Call<ChannelJsonModel> getData();
 }

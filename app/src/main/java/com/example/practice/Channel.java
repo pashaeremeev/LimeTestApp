@@ -4,11 +4,11 @@ public class Channel {
 
     private int id;
     private String name;
-    private int image;
+    private String image;
     private boolean isFavorite;
     private String stream;
 
-    public Channel(int id, String name, int image, boolean isFavorite, String stream) {
+    public Channel(int id, String name, String image, boolean isFavorite, String stream) {
         this.id = id;
         this.name = name;
         this.image = image;
@@ -32,11 +32,11 @@ public class Channel {
         this.name = name;
     }
 
-    public int getImage() {
+    public String getImage() {
         return image;
     }
 
-    public void setImage(int image) {
+    public void setImage(String image) {
         this.image = image;
     }
 

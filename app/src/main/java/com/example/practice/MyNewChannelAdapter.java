@@ -17,17 +17,17 @@ import kotlin.jvm.functions.Function1;
 
 public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolder> {
 
-    private Function1<Data, Void> clickListener;
+    private Function1<ChannelJson, Void> clickListener;
     private Context context;
-    private List<Data> channels;
+    private ArrayList<ChannelJson> channels;
 
-    public MyNewChannelAdapter(Context context, ArrayList<Data> channels, Function1<Data, Void> clickListener) {
+    public MyNewChannelAdapter(Context context, ArrayList<ChannelJson> channels, Function1<ChannelJson, Void> clickListener) {
         this.clickListener = clickListener;
         this.context = context;
         this.channels = channels;
     }
 
-    public void setChannels(ArrayList<Data> channels) {
+    public void setChannels(ArrayList<ChannelJson> channels) {
         this.channels = channels;
     }
 
@@ -40,15 +40,21 @@ public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolde
 
     @Override
     public void onBindViewHolder(@NonNull MyViewChannelHolder holder, int position) {
-        Data item = channels.get(position);
-        Uri urlImage = Uri.parse(item.getImage());
-        holder.getNameChannel().setText(item.getName());
-        holder.getTvShow().setText(item.getId() + "");
+        ChannelJson item = channels.get(position);
+        Channel channelItem = item.createChannel();
+        Epg epgItem = item.createEpg();
+        Uri urlImage = Uri.parse(channelItem.getImage());
+        holder.getNameChannel().setText(channelItem.getName());
+        holder.getTvShow().setText(epgItem.getTitle());
         Glide.with(context)
                 .load(urlImage)
                 .error(R.drawable.image_not_supported)
                 .into(holder.getIconChannel());
-        holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
+        if (channelItem.isFavorite()) {
+            holder.getFavoriteView().setImageResource(R.drawable.star_selected);
+        } else {
+            holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
+        }
         holder.itemView.setOnClickListener(view -> clickListener.invoke(item));
     }
 

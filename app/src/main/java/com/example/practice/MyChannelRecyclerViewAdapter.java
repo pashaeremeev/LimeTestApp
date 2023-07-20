@@ -1,6 +1,8 @@
 package com.example.practice;
 
 import android.content.Context;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
@@ -29,7 +31,8 @@ public class MyChannelRecyclerViewAdapter extends RecyclerView.Adapter<MyViewCha
     @Override
     public void onBindViewHolder(@NonNull MyViewChannelHolder holder, int position) {
         Channel item = channels.get(position);
-        holder.getIconChannel().setImageResource(item.getImage());
+        Drawable icon = new BitmapDrawable(context.getResources(), item.getImage());
+        holder.getIconChannel().setImageDrawable(icon);
         holder.getNameChannel().setText(item.getName());
         if (item.isFavorite()) {
             holder.getFavoriteView().setImageResource(R.drawable.star_selected);

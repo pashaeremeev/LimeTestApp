@@ -25,12 +25,11 @@ import java.util.ArrayList;
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         MyNewChannelAdapter adapter = new MyNewChannelAdapter(
                 view.getContext(),
-                new ArrayList<Data>(),
+                new ArrayList<ChannelJson>(),
                 channel -> clickOnChannelView(channel)
         );
         recyclerView.setAdapter(adapter);
         DataRepo.get(list -> {
-
             adapter.setChannels(list);
             adapter.notifyDataSetChanged();
             return null;
@@ -38,7 +37,7 @@ import java.util.ArrayList;
         return view;
     }
 
-    private Void clickOnChannelView(Data channel) {
+    private Void clickOnChannelView(ChannelJson channel) {
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         fragmentTransaction.replace(R.id.videoCntainer, VideoFragment.getInstance(channel.getId()));

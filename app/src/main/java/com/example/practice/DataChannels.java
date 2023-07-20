@@ -13,14 +13,14 @@ public class DataChannels extends ArrayList<Channel> {
     }
 
     private void createChannelList() {
-        this.add(new Channel(generateId(), "Первый канал", R.drawable.first_channel, true, URL));
-        this.add(new Channel(generateId(), "НТВ", R.drawable.ntv, false, URL));
-        this.add(new Channel(generateId(), "ТВ3", R.drawable.tv3, false, URL));
-        this.add(new Channel(generateId(), "2x2", R.drawable.two_on_two, true, URL));
-        this.add(new Channel(generateId(), "Пятница!", R.drawable.friday, true, URL));
-        this.add(new Channel(generateId(), "Суббота!", R.drawable.saturday, false, URL));
-        this.add(new Channel(generateId(), "Карусель", R.drawable.carousel, false, URL));
-        this.add(new Channel(generateId(), "ТНТ", R.drawable.tnt, false, URL));
+        this.add(new Channel(generateId(), "Первый канал", "@drawable/first_channel.png", true, URL));
+        this.add(new Channel(generateId(), "НТВ", "@drawable/first_channel.png", false, URL));
+        this.add(new Channel(generateId(), "ТВ3", "@drawable/first_channel.png", false, URL));
+        this.add(new Channel(generateId(), "2x2", "@drawable/first_channel.png", true, URL));
+        this.add(new Channel(generateId(), "Пятница!", "@drawable/first_channel.png", true, URL));
+        this.add(new Channel(generateId(), "Суббота!", "@drawable/first_channel.png", false, URL));
+        this.add(new Channel(generateId(), "Карусель", "@drawable/first_channel.png", false, URL));
+        this.add(new Channel(generateId(), "ТНТ", "@drawable/first_channel.png", false, URL));
     }
 
     private int generateId() {
