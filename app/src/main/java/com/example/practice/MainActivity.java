@@ -1,30 +1,29 @@
 package com.example.practice;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.TypedValue;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.widget.EditText;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
-import androidx.fragment.app.Fragment;
-import androidx.media3.common.util.Log;
 import androidx.media3.common.util.UnstableApi;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.lang.reflect.Type;
 
 @UnstableApi public class MainActivity extends AppCompatActivity {
 
     private static final int SIZE_OF_SEARCH_TEXT_PX = 46;
+    public static final String APP_PREFERENCES = "APP_PREFERENCES";
+
+    public static DataJson dataJson;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private final String[] tabNames = new String[]{"Все", "Избранные"};
@@ -43,25 +42,11 @@ import retrofit2.Response;
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) ->
                 tab.setText(tabNames[position])).attach();
         toSetSettingsOfSearchView();
+    }
 
-//        Call<Data> getData = RetrofitClient.getInstance().getApi().getData();
-//        getData.enqueue(new Callback<Data>() {
-//            @Override
-//            public void onResponse(Call<Data> call, Response<Data> response) {
-//                if (response.isSuccessful()) {
-//                    Data data = response.body();
-//                    Log.d("request", String.format(
-//                            "\nsuccess: %d\n noSuccess: %b\n password: %s",
-//                            data.getSuccess(), data.isNoSuccess(), data.getPassword()
-//                    ));
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Data> call, Throwable t) {
-//                Log.e("request", t.getLocalizedMessage());
-//            }
-//        });
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     private void toSetSettingsOfSearchView() {

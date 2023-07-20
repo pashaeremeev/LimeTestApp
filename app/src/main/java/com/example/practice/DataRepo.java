@@ -1,10 +1,17 @@
 package com.example.practice;
 
+import static android.content.Context.MODE_PRIVATE;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import android.util.Log;
 
-import java.io.IOException;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 
 import kotlin.jvm.functions.Function1;
 import retrofit2.Call;
@@ -13,17 +20,15 @@ import retrofit2.Response;
 
 public class DataRepo {
 
+    public static final String APP_PREFERENCES = "APP_PREFERENCES";
+
     private static DataRepo dataRepo;
     private static ChannelJsonModel channelJsonModel;
     private static ArrayList<ChannelJson> listData;
     private static ArrayList<Channel> channels;
     private static ArrayList<Epg> epgs;
 
-    public DataRepo(Function1<ArrayList<ChannelJson>,Void> callback) {
-        createDataRepo(callback);
-    }
-
-    private void createDataRepo(Function1<ArrayList<ChannelJson>,Void> callback) {
+    private static void downloadChannels(Function1<ArrayList<ChannelJson>, Void> callback) {
         RetrofitClient.getInstance().getApi().getData().enqueue(new Callback<ChannelJsonModel>() {
             @Override
             public void onResponse(Call<ChannelJsonModel> call, Response<ChannelJsonModel> response) {
@@ -52,14 +57,6 @@ public class DataRepo {
         });
     }
 
-    public static ArrayList<ChannelJson> get(Function1<ArrayList<ChannelJson>,Void> callback) {
-        if (dataRepo == null) {
-            dataRepo = new DataRepo(callback);
-        }
-
-        return listData;
-    }
-
     public static ArrayList<Channel> getChannelList() {
         channels = new ArrayList<>();
         for (int i = 0; i < listData.size(); i++) {
@@ -76,6 +73,29 @@ public class DataRepo {
             epgs.add(epg);
         }
         return epgs;
+    }
+
+    public static void loadData(Context context, Function1<ArrayList<ChannelJson>,Void> callback) {
+        SharedPreferences sPref = context.getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE);
+        String modelJsonString = sPref.getString(APP_PREFERENCES, "");
+        Type type = new TypeToken<ChannelJsonModel>(){}.getType();
+        ChannelJsonModel channelJsonModel = new Gson().fromJson(modelJsonString, type);
+        if (channelJsonModel == null) {
+            downloadChannels(callback);
+        } else {
+            DataJson.CHANNEL_JSON_MODEL = channelJsonModel;
+        }
+    }
+
+    public static void saveData(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(APP_PREFERENCES, MODE_PRIVATE).edit();
+        String modelJsonString = new Gson().toJson(DataJson.CHANNEL_JSON_MODEL);
+        editor.putString(APP_PREFERENCES, modelJsonString);
+        editor.commit();
+    }
+
+    public static ChannelJsonModel getChannelJsonModel() {
+        return channelJsonModel;
     }
 
     public static Channel getById(int id) {

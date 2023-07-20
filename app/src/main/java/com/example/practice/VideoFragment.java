@@ -40,7 +40,7 @@ import java.util.HashMap;
 @UnstableApi public class VideoFragment extends Fragment {
 
     public static final String BUNDLE_ID_KEY = "BUNDLE_ID_KEY";
-    public static final String APP_PREFERENCES = "APP_PREFERENCES";
+    public static final ChannelJsonModel DATA_MODEL = DataJson.CHANNEL_JSON_MODEL;
 
     private PlayerView playerView;
     private ProgressBar progressBar;
@@ -65,19 +65,16 @@ import java.util.HashMap;
 
         container.setVisibility(View.VISIBLE);
         //DataChannels channels = DataChannels.get();
-        ArrayList<Channel> channels = DataRepo.getChannelList();
+        //ArrayList<Channel> channels = DataRepo.getChannelList();
 
         int channelId = getArguments().getInt(BUNDLE_ID_KEY) /*channels.get(0).getId()*/;
-        Uri videoUrl = Uri.parse(DataRepo.getById(channelId).getStream());
+        Uri videoUrl = Uri.parse(DataJson.getChannelById(channelId).getStream());
 
         playerView = fragment.findViewById(R.id.exoplayerView);
         progressBar = fragment.findViewById(R.id.progressBar);
         ImageView settingsBtn = playerView.findViewById(R.id.settingsBtn);
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
         ImageView backBtn = playerView.findViewById(R.id.backBtn);
-
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(
-                APP_PREFERENCES, Context.MODE_PRIVATE);
 
         //getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);

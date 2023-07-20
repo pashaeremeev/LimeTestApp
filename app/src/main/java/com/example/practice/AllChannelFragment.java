@@ -25,11 +25,13 @@ import java.util.ArrayList;
         recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
         MyNewChannelAdapter adapter = new MyNewChannelAdapter(
                 view.getContext(),
-                new ArrayList<ChannelJson>(),
+                (DataJson.CHANNEL_JSON_MODEL != null) ? DataJson.CHANNEL_JSON_MODEL.getChannelJsons() : new ArrayList<>(),
+                /*new ArrayList<ChannelJson>(),*/
                 channel -> clickOnChannelView(channel)
         );
+
         recyclerView.setAdapter(adapter);
-        DataRepo.get(list -> {
+        DataRepo.loadData(getContext() ,list -> {
             adapter.setChannels(list);
             adapter.notifyDataSetChanged();
             return null;
