@@ -1,7 +1,6 @@
 package com.example.practice;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;

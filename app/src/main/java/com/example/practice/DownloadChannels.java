@@ -37,7 +37,14 @@ public class DownloadChannels {
                                 Epg epg = channelJson.createEpg();
                                 epgs.add(epg);
                             }
-                            if (channelRepo.getChannels().toString().equals(channels.toString())) {
+                            ArrayList<Channel> channelsRepo = channelRepo.getLiveData().getValue();
+                            for (int i = 0; i < channels.size(); i++) {
+                                if (channels.get(i).getId() == channelsRepo.get(i).getId()
+                                        && channels.get(i).isFavorite() != channelsRepo.get(i).isFavorite()) {
+                                    channels.get(i).setFavorite(channelsRepo.get(i).isFavorite());
+                                }
+                            }
+                            if (channelsRepo.toString().equals(channels.toString())) {
                                 callback.invoke(false);
                             }
                             channelRepo.saveChannels(channels);

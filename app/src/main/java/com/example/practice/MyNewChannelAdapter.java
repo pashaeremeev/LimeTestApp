@@ -19,16 +19,20 @@ import kotlin.jvm.functions.Function1;
 
 public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolder> {
 
-    private Function1<Channel, Void> clickListener;
+    private ClickListener clickListener;
     private Context context;
     private ArrayList<Channel> channels;
     private ArrayList<Epg> epgs;
+    private ClickListener favClickListener;
 
-    public MyNewChannelAdapter(Context context, ArrayList<Channel> channels, ArrayList<Epg> epgs, Function1<Channel, Void> clickListener) {
+    public MyNewChannelAdapter(Context context,
+                               ArrayList<Epg> epgs,
+                               ClickListener clickListener,
+                               ClickListener favClickListener) {
         this.clickListener = clickListener;
         this.context = context;
-        this.channels = channels;
         this.epgs = epgs;
+        this.favClickListener = favClickListener;
     }
 
     public void setChannels(ArrayList<Channel> channels) {
@@ -62,20 +66,8 @@ public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolde
         } else {
             holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
         }
-        holder.getFavoriteView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (channelItem.isFavorite()) {
-                    holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
-                    channelItem.setFavorite(false);
-                } else {
-                    holder.getFavoriteView().setImageResource(R.drawable.star_selected);
-                    channelItem.setFavorite(true);
-                }
-            }
-        });
+        holder.getFavoriteView().setOnClickListener(view -> favClickListener.invoke(channelItem));
         holder.itemView.setOnClickListener(view -> clickListener.invoke(channelItem));
-        //holder.getIconChannel().setOnClickListener(view -> );
     }
 
     @Override
