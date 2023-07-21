@@ -34,7 +34,7 @@ public class EpgRepo {
         ArrayList<Epg> epgs = getEpgs();
         for (int i = 0; i < epgs.size(); i++) {
             Epg epg = epgs.get(i);
-            if (epg.getId() == id) {
+            if (epg.getChannelId() == id) {
                 return epg;
             }
         }

@@ -3,9 +3,12 @@ package com.example.practice;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
+import androidx.media3.common.util.Log;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -59,7 +62,20 @@ public class MyNewChannelAdapter extends RecyclerView.Adapter<MyViewChannelHolde
         } else {
             holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
         }
+        holder.getFavoriteView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (channelItem.isFavorite()) {
+                    holder.getFavoriteView().setImageResource(R.drawable.star_unselected);
+                    channelItem.setFavorite(false);
+                } else {
+                    holder.getFavoriteView().setImageResource(R.drawable.star_selected);
+                    channelItem.setFavorite(true);
+                }
+            }
+        });
         holder.itemView.setOnClickListener(view -> clickListener.invoke(channelItem));
+        //holder.getIconChannel().setOnClickListener(view -> );
     }
 
     @Override

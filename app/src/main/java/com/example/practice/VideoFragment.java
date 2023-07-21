@@ -1,17 +1,13 @@
 package com.example.practice;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.provider.ContactsContract;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
@@ -79,14 +75,14 @@ import java.util.HashMap;
         ImageView fullScreenBtn = playerView.findViewById(R.id.fullscreenBtn);
         ImageView backBtn = playerView.findViewById(R.id.backBtn);
         ImageView iconChannel = playerView.findViewById(R.id.iconChannel);
-        TextView channelName = playerView.findViewById(R.id.nameChannel);
+        TextView channelName = playerView.findViewById(R.id.name);
         TextView tvShow = playerView.findViewById(R.id.tvShow);
 
-//        Glide.with(getContext())
-//                .load(channel.getImage())
-//                .into(iconChannel);
-//        channelName.setText(channel.getName());
-//        tvShow.setText(epgOfChannel.getTitle());
+        Glide.with(getContext())
+                .load(channel.getImage())
+                .into(iconChannel);
+        channelName.setText(channel.getName());
+        tvShow.setText(epgOfChannel.getTitle());
 
         //getActivity().getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
         //        WindowManager.LayoutParams.FLAG_FULLSCREEN);
